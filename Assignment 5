@@ -1,0 +1,40 @@
+##3.11 in Problem solving
+def dictionary(webstr):#define a function, parameter is a URL
+    import urllib.request#import url module
+    from pythonds.basic.stack #import stack module
+    page = urllib.request.urlopen(webstr)#page is a file whose content is from stringurl
+    pagetext = page.read()#pagetext read the contents from page and store them in pagetext
+    decodedpagetext = pageText.decode("utf-8")#decodepagetext is a file whose content is decoded pagetext
+    line = decodedpagetext.readline()#read the first line of decodedpagetext and assign it to line
+    smallsize = 0#decline a smallsize to store the quantity of '<' in a line
+    bigsize = 0#decline a smallsize to store the quantity of '>' in a line
+    nextthing = True#decline a bool variable to judge whether the html is a valid one
+    s=Stack()#decline a stack variable
+    while line!="":#if line has content, do while loop
+        for i in range(0, len(line)):#do a for loop to count the quantity of '<' and '>' in a line
+            if line[i] == '<':
+                smallsize += 1
+            if line[i] == '>':
+                bigsize += 1
+        if smallsize != bigsize:#if '<' doesn't equal to '>', apparently it isn;t a valid html, so break, jump out of this while loop
+            nextthing = False
+            break
+        if(smallsize > 0):#set this condition, if a line doesn't have '<' or '>', we need to do nothing for this line
+            for i in range(1, smallsize+1):#look though all the contents in <>
+                temp = line.split('<')[i].split('>')[0]#use split function to split string in <>
+                if(temp[0] == '/'):#judge whether the string is /
+                    if(temp[1:] == s.peek()):#if it's /, it means it will close, so needing to judge whether the previous one is its' opening, if the previous one(the first element in stack) is its' opening
+                        s.pop()#delete the first element in stack
+                    else:
+                        nextthing = False#it's not a valid html
+                else:
+                    s.push(temp)#if it's not /, it's the opening of one pair, so push it into the the first position of stack
+        line = decodedpagetext.readline()#read the next line of decodedpagetext
+        smallsize = 0#inatialize smallsize
+        bigsize = 0#inatialize bigsize
+    
+    if(s.isEmpty() == True and nextthing == True):#if s remains nothing and nextthing is true
+        print('a valid html')#html is a valid html
+    else:
+        print('NOT A VALID HTML, PLEASE CHECK IT!')
+            
